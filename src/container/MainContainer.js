@@ -9,7 +9,7 @@ export default class MainContainer extends Component {
         meme: {},
         num : 1,
       }
-      this.APIURL = `https://serv-eu01.prashant.me:5555/api/`;
+      this.APIURL = `https://serv.prashant.me:5555/api/`;
     }
 
     componentDidMount() {
