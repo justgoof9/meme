@@ -1,2 +1,3 @@
 # meme
-A meme aggregation website.
+Website to serve meme
+

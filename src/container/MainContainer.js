@@ -6,44 +6,79 @@ export default class MainContainer extends Component {
       super();
       
       this.state = {
-        memes: {},
-        num : 0,
+        meme: {},
+        num : 1,
       }
-      this.APIURL = `http://serv-eu01.prashant.me:1336/api/meme/${this.state.num}`;
+      this.APIURL = `http://serv-eu01.prashant.me:1336/api/`;
     }
 
     componentDidMount() {
-        fetch(this.APIURL)
-            .then(resp => resp.json())
-            .then(data => {
-                console.log(data)
-                const updatedMemes = this.state.memes;
-                updatedMemes.push(data);
-                this.setState({
-                    memes : updatedMemes,
-                })
-                console.log(this.state.memes);
-            }) 
+            this.fetchMeme();
+      }
+    
+      fetchMeme = () => {
+        
+        fetch(this.APIURL+"meme/"+this.state.num)
+          .then(resp => resp.json())
+          .then(data => {
+            this.setState({
+              meme: data
+            });
+          });
+      };
+
+      fetchRandomMeme = () => {
+
+        fetch(this.APIURL+"random/")
+        .then(resp => resp.json())
+        .then(data => {
+          this.setState({
+            meme: data
+          });
+        });
+      }
+
+      randomMeme = () => {
+        this.setState({num : this.state.meme.id
+        },this.fetchRandomMeme);
+        console.log(this.state.meme);
+
+      }
+
+    nextMeme = () => {
+        if(this.state.meme.id + 1 > this.state.meme.totalMemes  ) {
+            this.setState({
+                num : 1
+            }, this.fetchMeme);
+        }else {
+        this.setState({
+            num:  this.state.num + 1
+          }, this.fetchMeme);
+        }
+        console.log(this.state.meme);
     }
 
-    nextPic = () => {
-       if(this.state.num > this.state.id) {
-           this.setState({
-               num : 0
-           })
-       } else {
-           this.setState({
-               num : this.state.num + 1
-           })
-       }
+    lastMeme = () => {
+        if(this.state.num - 1 < 1  ) {
+            this.setState({
+                num : this.state.meme.totalMemes
+            }, this.fetchMeme);
+        }else {
+        this.setState({
+            num:  this.state.num - 1
+          }, this.fetchMeme);
+        }
+        console.log(this.state.meme);
     }
     
     render() {
         return(
             <div>
             <h1>{this.state.meme.title}</h1>
-            <img key={ this.state.num } src={this.state.memes[this.state.num].image} />
-            <button onClick={this.nextPic}>Next</button>
+            <img key={ this.state.num } src={this.state.meme.encodedurl} />
+            <button onClick={this.lastMeme}>Back</button>
+            <button onClick={this.nextMeme}>Next</button>
+            <button onClick={this.randomMeme}>Random</button>
         </div>
         )
     }
